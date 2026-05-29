@@ -88,7 +88,7 @@ export function DashboardGrid({
             onQuickFilterChange={setQuickFilter}
           />
         </CardHeader>
-        <CardContent className="p-5 mt-5">
+        <CardContent className="p-5">
           <EmployeeGrid
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}

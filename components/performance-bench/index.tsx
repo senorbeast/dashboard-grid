@@ -265,11 +265,16 @@ export function PerformanceBenchPanel({
           sparklineValues={history.map((s) => s.totalLoadMs)}
           sparklineStroke="#ec4899"
           sub={
-            loadGrade && (
-              <span className={`text-[0.65rem] font-bold uppercase tracking-wide ${loadGrade.tw}`}>
-                {loadGrade.label}
+            <div className="flex flex-col">
+              {loadGrade && (
+                <span className={`text-[0.65rem] font-bold uppercase tracking-wide ${loadGrade.tw}`}>
+                  {loadGrade.label}
+                </span>
+              )}
+              <span className="text-[0.65rem] text-muted-foreground mt-0.5 leading-tight">
+                ( Time taken by AG Grid to render )
               </span>
-            )
+            </div>
           }
         />
 
