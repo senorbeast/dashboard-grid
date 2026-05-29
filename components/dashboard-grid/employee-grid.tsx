@@ -9,6 +9,7 @@ type EmployeeGridProps = {
   quickFilter: string;
   rows: Employee[];
   theme: Theme;
+  onGridRenderComplete?: () => void;
 };
 
 export function EmployeeGrid({
@@ -17,6 +18,7 @@ export function EmployeeGrid({
   quickFilter,
   rows,
   theme,
+  onGridRenderComplete,
 }: EmployeeGridProps) {
   const [expandedRowId, setExpandedRowId] = useState<string | number | null>(null);
 
@@ -65,6 +67,8 @@ export function EmployeeGrid({
         theme={theme}
         getRowHeight={getRowHeight}
         onRowClicked={onRowClicked}
+        onRowDataUpdated={() => onGridRenderComplete?.()}
+        onFirstDataRendered={() => onGridRenderComplete?.()}
       />
     </div>
   );

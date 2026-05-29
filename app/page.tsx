@@ -27,6 +27,7 @@ export default function Home() {
     liveFps,
     handleScaleChange,
     onProfilerRender,
+    onGridRenderComplete,
   } = usePerformanceBench();
 
   return (
@@ -137,6 +138,7 @@ export default function Home() {
             showLegends={showLegends}
             showSettings={showSettings}
             showMetrics={showMetrics}
+            onGridRenderComplete={onGridRenderComplete}
           />
         </Profiler>
       </div>

@@ -50,6 +50,10 @@ export type UsePerformanceBenchReturn = {
     phase: "mount" | "update" | "nested-update",
     actualDuration: number,
   ) => void;
+  /**
+   * Called when AG Grid completes loading and rendering the new rows.
+   */
+  onGridRenderComplete: () => void;
 };
 
 // ---------------------------------------------------------------------------
@@ -69,11 +73,13 @@ export function usePerformanceBench(): UsePerformanceBenchReturn {
   // We only record a snapshot when a scale-change is "in flight".
   const pendingScaleRef = useRef<ScaleOption | null>(null);
   const startTimeRef = useRef<number | null>(null);
+  const reactRenderMsRef = useRef<number>(0);
 
   // ── Trigger a scale change ──────────────────────────────────────────────
   const handleScaleChange = useCallback((newScale: ScaleOption) => {
     pendingScaleRef.current = newScale;
     startTimeRef.current = performance.now();
+    reactRenderMsRef.current = 0; // reset
     setScale(newScale);
     startTransition(() => {
       setRows(generateEmployees(newScale));
@@ -91,22 +97,30 @@ export function usePerformanceBench(): UsePerformanceBenchReturn {
       actualDuration: number,
     ) => {
       if (phase === "mount" || pendingScaleRef.current === null) return;
-
-      const totalLoadMs = startTimeRef.current ? performance.now() - startTimeRef.current : actualDuration;
-
-      const snap: PerfSnapshot = {
-        scale: pendingScaleRef.current,
-        renderMs: Math.round(actualDuration * 10) / 10,
-        fps: currentFps > 0 ? Math.round(currentFps) : null,
-        totalLoadMs: Math.round(totalLoadMs * 10) / 10,
-      };
-
-      pendingScaleRef.current = null;
-      startTimeRef.current = null;
-      setHistory((prev) => [...prev, snap]);
+      reactRenderMsRef.current = actualDuration;
     },
-    [currentFps],
+    [],
   );
+
+  // ── AG Grid Render Completion callback ──────────────────────────────────
+  const onGridRenderComplete = useCallback(() => {
+    if (pendingScaleRef.current === null || startTimeRef.current === null) return;
+
+    const totalLoadMs = performance.now() - startTimeRef.current;
+    const renderMs = reactRenderMsRef.current;
+
+    const snap: PerfSnapshot = {
+      scale: pendingScaleRef.current,
+      renderMs: Math.round(renderMs * 10) / 10,
+      fps: currentFps > 0 ? Math.round(currentFps) : null,
+      totalLoadMs: Math.round(totalLoadMs * 10) / 10,
+    };
+
+    pendingScaleRef.current = null;
+    startTimeRef.current = null;
+    reactRenderMsRef.current = 0;
+    setHistory((prev) => [...prev, snap]);
+  }, [currentFps]);
 
   const liveFps = currentFps > 0 ? Math.round(currentFps) : null;
 
@@ -118,5 +132,6 @@ export function usePerformanceBench(): UsePerformanceBenchReturn {
     liveFps,
     handleScaleChange,
     onProfilerRender,
+    onGridRenderComplete,
   };
 }

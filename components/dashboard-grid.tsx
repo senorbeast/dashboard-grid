@@ -26,6 +26,7 @@ type DashboardGridProps = {
   showLegends: boolean;
   showSettings: boolean;
   showMetrics: boolean;
+  onGridRenderComplete?: () => void;
 };
 
 export function DashboardGrid({
@@ -33,6 +34,7 @@ export function DashboardGrid({
   showLegends,
   showSettings,
   showMetrics,
+  onGridRenderComplete,
 }: DashboardGridProps) {
   const { theme } = useTheme();
   const [quickFilter, setQuickFilter] = useState("");
@@ -93,6 +95,7 @@ export function DashboardGrid({
             quickFilter={quickFilter}
             rows={visibleRows}
             theme={gridTheme}
+            onGridRenderComplete={onGridRenderComplete}
           />
         </CardContent>
       </Card>
