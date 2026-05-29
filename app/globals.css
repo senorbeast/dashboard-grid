@@ -73,3 +73,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Fix dropdown and option colors inside AG Grid to prevent black-on-black or blank options */
+.ag-theme-quartz select,
+.ag-theme-quartz option,
+.ag-theme-custom select,
+.ag-theme-custom option,
+.ag-popup,
+.ag-select,
+.ag-select-list,
+.ag-select-list-item,
+.ag-picker-field {
+  color: var(--foreground) !important;
+  background-color: var(--card) !important;
+}
+
+.ag-theme-quartz .ag-paging-panel select,
+.ag-theme-custom .ag-paging-panel select {
+  color: var(--foreground) !important;
+  background-color: var(--card) !important;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+

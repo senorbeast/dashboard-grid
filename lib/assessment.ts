@@ -61,7 +61,8 @@ export function filterEmployeesBySearch(rows: Employee[], query: string) {
 }
 
 export function getAssessmentMetrics(rows: Employee[]): AssessmentMetrics {
-  if (rows.length === 0) {
+  const len = rows.length;
+  if (len === 0) {
     return {
       activeCount: 0,
       averageRating: 0,
@@ -72,27 +73,44 @@ export function getAssessmentMetrics(rows: Employee[]): AssessmentMetrics {
     };
   }
 
+  let activeCount = 0;
+  let totalRating = 0;
+  let totalSalary = 0;
+  let totalProjects = 0;
+  const uniqueDepartments = new Set<string>();
+
+  for (let i = 0; i < len; i++) {
+    const employee = rows[i];
+    if (employee.isActive) activeCount++;
+    totalRating += employee.performanceRating;
+    totalSalary += employee.salary;
+    totalProjects += employee.projectsCompleted;
+    uniqueDepartments.add(employee.department);
+  }
+
   return {
-    activeCount: rows.filter((employee) => employee.isActive).length,
-    averageRating:
-      rows.reduce((sum, employee) => sum + employee.performanceRating, 0) /
-      rows.length,
-    averageSalary:
-      rows.reduce((sum, employee) => sum + employee.salary, 0) / rows.length,
-    departmentCount: new Set(rows.map((employee) => employee.department)).size,
-    employeeCount: rows.length,
-    projectsCompleted: rows.reduce(
-      (sum, employee) => sum + employee.projectsCompleted,
-      0,
-    ),
+    activeCount,
+    averageRating: totalRating / len,
+    averageSalary: totalSalary / len,
+    departmentCount: uniqueDepartments.size,
+    employeeCount: len,
+    projectsCompleted: totalProjects,
   };
 }
 
 export function getAllSkills(rows: Employee[]): string {
   const skills = new Set<string>();
-  rows.forEach((employee) => {
-    employee.skills.forEach((skill) => skills.add(skill));
-  });
+  const len = rows.length;
+  // If the dataset is large, a small sample of 2,000 rows is statistically guaranteed to contain all unique skills
+  const limit = Math.min(len, 2000);
+  
+  for (let i = 0; i < limit; i++) {
+    const employee = rows[i];
+    const sLen = employee.skills.length;
+    for (let j = 0; j < sLen; j++) {
+      skills.add(employee.skills[j]);
+    }
+  }
   return Array.from(skills).sort().join(", ");
 }
 

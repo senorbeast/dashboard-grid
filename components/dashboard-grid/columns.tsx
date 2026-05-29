@@ -53,8 +53,11 @@ export function getEmployeeColumnDefs(allSkills?: string): ColDef<Employee>[] {
       field: "skills",
       minWidth: 230,
       headerTooltip: allSkills,
-      cellRenderer: (params: ICellRendererParams<Employee, string[]>) =>
-        params.value ? <SkillsCell value={params.value} /> : null,
+      cellRenderer: (params: ICellRendererParams<Employee, string[]>) => {
+        if (!params.value) return null;
+        const isExpanded = params.node.rowHeight ? params.node.rowHeight > 50 : false;
+        return <SkillsCell value={params.value} isExpanded={isExpanded} />;
+      },
       valueFormatter: ({ value }) => value?.join(", ") ?? "",
     },
     {

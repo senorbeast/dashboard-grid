@@ -25,12 +25,14 @@ type DashboardGridProps = {
   rows?: Employee[];
   showLegends: boolean;
   showSettings: boolean;
+  showMetrics: boolean;
 };
 
 export function DashboardGrid({
   rows = defaultEmployees,
   showLegends,
   showSettings,
+  showMetrics,
 }: DashboardGridProps) {
   const { theme } = useTheme();
   const [quickFilter, setQuickFilter] = useState("");
@@ -59,12 +61,14 @@ export function DashboardGrid({
 
   return (
     <div className="space-y-5">
-      <MetricsSummary
-        metrics={metrics}
-        rows={visibleRows}
-        showLegends={showLegends}
-        showSettings={showSettings}
-      />
+      {showMetrics && (
+        <MetricsSummary
+          metrics={metrics}
+          rows={visibleRows}
+          showLegends={showLegends}
+          showSettings={showSettings}
+        />
+      )}
 
       <Card>
         <CardHeader className="flex flex-col gap-4 border-b border-border md:flex-row md:items-center md:justify-between">
@@ -82,7 +86,7 @@ export function DashboardGrid({
             onQuickFilterChange={setQuickFilter}
           />
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-5 mt-5">
           <EmployeeGrid
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}

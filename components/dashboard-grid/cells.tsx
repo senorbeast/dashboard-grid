@@ -19,7 +19,19 @@ export function RatingBadge({ value }: { value: number }) {
   return <Badge tone={tone}>{value.toFixed(1)}</Badge>;
 }
 
-export function SkillsCell({ value }: { value: string[] }) {
+export function SkillsCell({ value, isExpanded }: { value: string[]; isExpanded?: boolean }) {
+  if (isExpanded) {
+    return (
+      <div className="flex flex-wrap gap-1.5 py-2.5 h-full items-center overflow-y-auto">
+        {value.map((skill) => (
+          <Badge key={skill} tone="zinc">
+            {skill}
+          </Badge>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
