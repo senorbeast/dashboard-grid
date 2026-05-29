@@ -221,14 +221,16 @@ export function PerformanceBenchPanel({
               <button
                 key={scale}
                 aria-pressed={active}
-                disabled={isPending}
                 id={`bench-scale-${scale}`}
                 onClick={() => onScaleChange(scale)}
                 className={[
                   "px-3.5 py-1 rounded-full border text-[0.8125rem] font-medium transition-all duration-150 leading-none",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
                   active
-                    ? "bg-primary border-primary text-primary-foreground shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]"
+                    ? [
+                        "bg-primary border-primary text-primary-foreground",
+                        "shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]",
+                        isPending ? "animate-pulse" : "",
+                      ].join(" ")
                     : "bg-muted border-border text-muted-foreground hover:border-primary hover:text-primary hover:bg-primary/5",
                 ].join(" ")}
               >
