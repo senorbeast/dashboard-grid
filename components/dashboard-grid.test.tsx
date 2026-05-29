@@ -102,7 +102,9 @@ describe("DashboardGrid integration", () => {
   });
 
   it("renders assessment metrics and the grid", () => {
-    renderWithTheme(<DashboardGrid rows={testRows} />);
+    renderWithTheme(
+      <DashboardGrid showLegends={true} showSettings={false} rows={testRows} />,
+    );
 
     expect(screen.getByText("Assessment Data")).toBeInTheDocument();
     expect(screen.getByText("Employees")).toBeInTheDocument();
@@ -115,22 +117,46 @@ describe("DashboardGrid integration", () => {
 
   it("filters rows by department and forwards quick search to AG Grid", async () => {
     const user = userEvent.setup();
-    renderWithTheme(<DashboardGrid rows={testRows} />);
+    renderWithTheme(
+      <DashboardGrid showLegends={true} showSettings={false} rows={testRows} />,
+    );
 
     await user.click(screen.getByRole("button", { name: "Engineering" }));
     await user.type(screen.getByLabelText("Search employees"), "ada");
 
     expect(screen.getByTestId("ag-grid")).toHaveAttribute(
       "data-row-count",
-      String(
-        testRows.filter((employee) => employee.department === "Engineering")
-          .length,
-      ),
+      "1",
     );
     expect(screen.getByTestId("ag-grid")).toHaveAttribute(
       "data-quick-filter",
       "ada",
     );
     expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
-  });
+    expect(screen.getByText("Employees").nextElementSibling?.textContent,
+    ).toBe("1");
+    expect(screen.getByText("Rating Bands")).toBeInTheDocument();
+    });
+
+    it("toggles legends and settings visibility", () => {
+    const { rerender } = renderWithTheme(
+      <DashboardGrid showLegends={true} showSettings={false} rows={testRows} />,
+    );
+
+    expect(screen.getByText("Rating Bands")).toBeInTheDocument();
+    expect(screen.queryByText("Rating Thresholds")).not.toBeInTheDocument();
+
+    rerender(
+      <ThemeProvider>
+        <DashboardGrid
+          showLegends={false}
+          showSettings={true}
+          rows={testRows}
+        />
+      </ThemeProvider>,
+    );
+
+    expect(screen.queryByText("Rating Bands")).not.toBeInTheDocument();
+    expect(screen.getByText("Rating Thresholds")).toBeInTheDocument();
+    });
 });

@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   employees as defaultEmployees,
   filterEmployeesByDepartment,
+  filterEmployeesBySearch,
   getAssessmentMetrics,
   type DepartmentFilter,
 } from "@/lib/assessment";
@@ -21,9 +22,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 type DashboardGridProps = {
   rows?: Employee[];
+  showLegends: boolean;
+  showSettings: boolean;
 };
 
-export function DashboardGrid({ rows = defaultEmployees }: DashboardGridProps) {
+export function DashboardGrid({
+  rows = defaultEmployees,
+  showLegends,
+  showSettings,
+}: DashboardGridProps) {
   const { theme } = useTheme();
   const [quickFilter, setQuickFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] =
@@ -33,9 +40,13 @@ export function DashboardGrid({ rows = defaultEmployees }: DashboardGridProps) {
     () => filterEmployeesByDepartment(rows, departmentFilter),
     [departmentFilter, rows],
   );
+  const visibleRows = useMemo(
+    () => filterEmployeesBySearch(filteredRows, quickFilter),
+    [filteredRows, quickFilter],
+  );
   const metrics = useMemo(
-    () => getAssessmentMetrics(filteredRows),
-    [filteredRows],
+    () => getAssessmentMetrics(visibleRows),
+    [visibleRows],
   );
   const columnDefs = useMemo(() => getEmployeeColumnDefs(), []);
   const defaultColDef = useMemo(() => getDefaultColDef(), []);
@@ -43,7 +54,12 @@ export function DashboardGrid({ rows = defaultEmployees }: DashboardGridProps) {
 
   return (
     <div className="space-y-5">
-      <MetricsSummary metrics={metrics} />
+      <MetricsSummary
+        metrics={metrics}
+        rows={visibleRows}
+        showLegends={showLegends}
+        showSettings={showSettings}
+      />
 
       <Card>
         <CardHeader className="flex flex-col gap-4 border-b border-border md:flex-row md:items-center md:justify-between">
@@ -66,7 +82,7 @@ export function DashboardGrid({ rows = defaultEmployees }: DashboardGridProps) {
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             quickFilter={quickFilter}
-            rows={filteredRows}
+            rows={visibleRows}
             theme={gridTheme}
           />
         </CardContent>

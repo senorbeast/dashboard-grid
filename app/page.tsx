@@ -1,7 +1,15 @@
+"use client";
+
+import { useState } from "react";
+import { Layers, Settings } from "lucide-react";
 import { DashboardGrid } from "@/components/dashboard-grid";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const [showLegends, setShowLegends] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+
   return (
     <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
@@ -12,10 +20,32 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <div className="flex rounded-md border border-border bg-muted p-1">
+              <Button
+                aria-pressed={showLegends}
+                className="h-10 w-12 p-0"
+                title="Toggle Legends"
+                variant={showLegends ? "secondary" : "ghost"}
+                onClick={() => setShowLegends(!showLegends)}
+              >
+                <Layers className="h-6 w-6 pointer-events-none" />
+                <span className="sr-only">Toggle Legends</span>
+              </Button>
+              <Button
+                aria-pressed={showSettings}
+                className="h-10 w-12 p-0"
+                title="Toggle Threshold Settings"
+                variant={showSettings ? "secondary" : "ghost"}
+                onClick={() => setShowSettings(!showSettings)}
+              >
+                <Settings className="h-6 w-6 pointer-events-none" />
+                <span className="sr-only">Toggle Threshold Settings</span>
+              </Button>
+            </div>
             <ThemeToggle />
           </div>
         </header>
-        <DashboardGrid />
+        <DashboardGrid showLegends={showLegends} showSettings={showSettings} />
       </div>
     </main>
   );

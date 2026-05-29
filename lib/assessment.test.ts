@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   filterEmployeesByDepartment,
+  filterEmployeesBySearch,
   getAssessmentMetrics,
 } from "@/lib/assessment";
 import type { Employee } from "@/lib/types";
@@ -81,6 +82,13 @@ describe("assessment data helpers", () => {
         (employee) => employee.department === "Engineering",
       ),
     ).toBe(true);
+  });
+
+  it("filters employees by search query across row fields", () => {
+    const result = filterEmployeesBySearch(testEmployees, "lovelace");
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.firstName).toBe("Ada");
   });
 
   it("calculates aggregate metrics for a row set", () => {

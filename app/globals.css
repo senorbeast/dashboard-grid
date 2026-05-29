@@ -16,6 +16,9 @@
   --border: #e2e8f0;
   --input: #ffffff;
   --ring: #93c5fd;
+  --accent-cyan: #0ea5e9;
+  --accent-amber: #f59e0b;
+  --accent-violet: #8b5cf6;
 }
 
 .dark {
@@ -32,6 +35,9 @@
   --border: #3f3f46;
   --input: #18181b;
   --ring: #2563eb;
+  --accent-cyan: #22d3ee;
+  --accent-amber: #fbbf24;
+  --accent-violet: #a78bfa;
 }
 
 @theme inline {

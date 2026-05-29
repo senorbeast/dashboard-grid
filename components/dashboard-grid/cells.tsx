@@ -9,7 +9,7 @@ export function ActiveBadge({ value }: { value: boolean }) {
 }
 
 export function RatingBadge({ value }: { value: number }) {
-  const tone = value >= 4.5 ? "green" : value >= 4 ? "blue" : "amber";
+  const tone = value >= 4.5 ? "violet" : value >= 4 ? "cyan" : "amber";
 
   return <Badge tone={tone}>{value.toFixed(1)}</Badge>;
 }

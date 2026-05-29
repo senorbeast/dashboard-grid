@@ -34,6 +34,32 @@ export function filterEmployeesByDepartment(
   return rows.filter((employee) => employee.department === department);
 }
 
+export function filterEmployeesBySearch(rows: Employee[], query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    return rows;
+  }
+
+  return rows.filter((employee) => {
+    const searchableValues = [
+      employee.id,
+      employee.firstName,
+      employee.lastName,
+      employee.email,
+      employee.department,
+      employee.position,
+      employee.location,
+      employee.manager ?? "",
+      employee.skills.join(" "),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return searchableValues.includes(normalizedQuery);
+  });
+}
+
 export function getAssessmentMetrics(rows: Employee[]): AssessmentMetrics {
   if (rows.length === 0) {
     return {
