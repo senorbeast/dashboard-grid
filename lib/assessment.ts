@@ -88,6 +88,14 @@ export function getAssessmentMetrics(rows: Employee[]): AssessmentMetrics {
   };
 }
 
+export function getAllSkills(rows: Employee[]): string {
+  const skills = new Set<string>();
+  rows.forEach((employee) => {
+    employee.skills.forEach((skill) => skills.add(skill));
+  });
+  return Array.from(skills).sort().join(", ");
+}
+
 export const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
   maximumFractionDigits: 0,

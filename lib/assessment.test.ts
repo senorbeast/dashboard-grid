@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   filterEmployeesByDepartment,
   filterEmployeesBySearch,
+  getAllSkills,
   getAssessmentMetrics,
 } from "@/lib/assessment";
 import type { Employee } from "@/lib/types";
@@ -128,5 +129,10 @@ describe("assessment data helpers", () => {
       employeeCount: 0,
       projectsCompleted: 0,
     });
+  });
+
+  it("extracts all unique skills from a row set", () => {
+    const skills = getAllSkills(testEmployees);
+    expect(skills).toBe("Automation, CRM, Negotiation, React, Testing, TypeScript");
   });
 });

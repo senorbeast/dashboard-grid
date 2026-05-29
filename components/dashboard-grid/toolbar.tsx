@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  departments,
-  type DepartmentFilter,
-} from "@/lib/assessment";
+import { departments, type DepartmentFilter } from "@/lib/assessment";
 
 const departmentAccents = [
   "var(--accent-cyan)",
@@ -20,10 +17,12 @@ type EmployeeGridToolbarProps = {
 
 function getDepartmentAccent(department: DepartmentFilter) {
   if (department === "All") {
-    return departmentAccents[0];
+    return "var(--foreground)";
   }
 
-  return departmentAccents[departments.indexOf(department) % departmentAccents.length];
+  return departmentAccents[
+    departments.indexOf(department) % departmentAccents.length
+  ];
 }
 
 export function EmployeeGridToolbar({

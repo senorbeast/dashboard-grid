@@ -5,6 +5,11 @@ import { Layers, Settings } from "lucide-react";
 import { DashboardGrid } from "@/components/dashboard-grid";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Home() {
   const [showLegends, setShowLegends] = useState(true);
@@ -21,26 +26,39 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             <div className="flex rounded-md border border-border bg-muted p-1">
-              <Button
-                aria-pressed={showLegends}
-                className="h-10 w-12 p-0"
-                title="Toggle Legends"
-                variant={showLegends ? "secondary" : "ghost"}
-                onClick={() => setShowLegends(!showLegends)}
-              >
-                <Layers className="h-6 w-6 pointer-events-none" />
-                <span className="sr-only">Toggle Legends</span>
-              </Button>
-              <Button
-                aria-pressed={showSettings}
-                className="h-10 w-12 p-0"
-                title="Toggle Threshold Settings"
-                variant={showSettings ? "secondary" : "ghost"}
-                onClick={() => setShowSettings(!showSettings)}
-              >
-                <Settings className="h-6 w-6 pointer-events-none" />
-                <span className="sr-only">Toggle Threshold Settings</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    aria-pressed={showLegends}
+                    className="h-10 w-12 p-0"
+                    variant={showLegends ? "secondary" : "ghost"}
+                    onClick={() => setShowLegends(!showLegends)}
+                  >
+                    <Layers className="h-6 w-6 pointer-events-none" />
+                    <span className="sr-only">Toggle Legends</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Toggle Legends</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    aria-pressed={showSettings}
+                    className="h-10 w-12 p-0"
+                    variant={showSettings ? "secondary" : "ghost"}
+                    onClick={() => setShowSettings(!showSettings)}
+                  >
+                    <Settings className="h-6 w-6 pointer-events-none" />
+                    <span className="sr-only">Toggle Threshold Settings</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Toggle Threshold Settings</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
             <ThemeToggle />
           </div>

@@ -13,6 +13,7 @@ import {
   employees as defaultEmployees,
   filterEmployeesByDepartment,
   filterEmployeesBySearch,
+  getAllSkills,
   getAssessmentMetrics,
   type DepartmentFilter,
 } from "@/lib/assessment";
@@ -48,7 +49,11 @@ export function DashboardGrid({
     () => getAssessmentMetrics(visibleRows),
     [visibleRows],
   );
-  const columnDefs = useMemo(() => getEmployeeColumnDefs(), []);
+  const allSkills = useMemo(() => getAllSkills(rows), [rows]);
+  const columnDefs = useMemo(
+    () => getEmployeeColumnDefs(allSkills),
+    [allSkills],
+  );
   const defaultColDef = useMemo(() => getDefaultColDef(), []);
   const gridTheme = useMemo(() => getGridTheme(theme), [theme]);
 

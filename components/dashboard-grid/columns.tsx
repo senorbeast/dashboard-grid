@@ -3,7 +3,7 @@ import { ActiveBadge, RatingBadge, SkillsCell } from "@/components/dashboard-gri
 import { currencyFormatter, dateFormatter } from "@/lib/assessment";
 import type { Employee } from "@/lib/types";
 
-export function getEmployeeColumnDefs(): ColDef<Employee>[] {
+export function getEmployeeColumnDefs(allSkills?: string): ColDef<Employee>[] {
   return [
     { field: "id", headerName: "ID", maxWidth: 90 },
     {
@@ -52,6 +52,7 @@ export function getEmployeeColumnDefs(): ColDef<Employee>[] {
     {
       field: "skills",
       minWidth: 230,
+      headerTooltip: allSkills,
       cellRenderer: (params: ICellRendererParams<Employee, string[]>) =>
         params.value ? <SkillsCell value={params.value} /> : null,
       valueFormatter: ({ value }) => value?.join(", ") ?? "",
