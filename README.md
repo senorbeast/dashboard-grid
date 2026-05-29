@@ -1,3 +1,4 @@
+
 # Dashboard Grid
 
 A Next.js App Router dashboard built with Tailwind CSS, shadcn-style UI primitives, and AG Grid. The dashboard displays typed employee assessment data from `lib/assessment-data.json`, supports light/dark themes, and includes department filtering, quick search, metrics, and a paginated grid.
@@ -49,6 +50,7 @@ npm test
 - `components/dashboard-grid.tsx`: dashboard container and state wiring.
 - `components/dashboard-grid/`: focused grid modules for columns, cells, toolbar, metrics, grid theme, and the AG Grid wrapper.
 - `components/theme-provider.tsx`: light/dark mode state and document class synchronization.
+- `docs/performance-metrics.md`: In-depth documentation on how performance metrics and the scaling engine are measured, calculated, and graded.
 - `lib/assessment-data.json`: JSON copy of the assessment data source.
 - `lib/assessment.ts`: typed data access, filtering, metric helpers, and formatters.
 - `lib/types.ts`: shared TypeScript data contracts.

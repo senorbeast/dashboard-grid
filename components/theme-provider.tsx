@@ -27,7 +27,7 @@ function isTheme(value: string | null): value is Theme {
 
 function readTheme(): Theme {
   if (typeof window === "undefined") {
-    return "light";
+    return "dark";
   }
 
   const storedTheme = window.localStorage.getItem(themeStorageKey);
@@ -36,13 +36,13 @@ function readTheme(): Theme {
     return storedTheme;
   }
 
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return window.matchMedia("(prefers-color-scheme: light)").matches
+    ? "light"
+    : "dark";
 }
 
 function readServerTheme(): Theme {
-  return "light";
+  return "dark";
 }
 
 function notifyThemeListeners() {
