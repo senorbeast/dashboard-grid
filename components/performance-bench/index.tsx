@@ -217,21 +217,31 @@ export function PerformanceBenchPanel({
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Row count selector">
           {SCALE_OPTIONS.map((scale) => {
             const active = scale === currentScale;
+            const isDanger = scale === 5000000;
             return (
               <button
                 key={scale}
                 aria-pressed={active}
                 id={`bench-scale-${scale}`}
                 onClick={() => onScaleChange(scale)}
+                title={isDanger ? "Crash ahead!" : undefined}
                 className={[
                   "px-3.5 py-1 rounded-full border text-[0.8125rem] font-medium transition-all duration-150 leading-none",
                   active
-                    ? [
-                        "bg-primary border-primary text-primary-foreground",
-                        "shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]",
-                        isPending ? "animate-pulse" : "",
-                      ].join(" ")
-                    : "bg-muted border-border text-muted-foreground hover:border-primary hover:text-primary hover:bg-primary/5",
+                    ? isDanger
+                      ? [
+                          "bg-red-600 border-red-600 text-white",
+                          "shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-red-600)_20%,transparent)]",
+                          isPending ? "animate-pulse" : "",
+                        ].join(" ")
+                      : [
+                          "bg-primary border-primary text-primary-foreground",
+                          "shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]",
+                          isPending ? "animate-pulse" : "",
+                        ].join(" ")
+                    : isDanger
+                      ? "bg-red-500/10 border-red-500/30 text-red-500 hover:border-red-500 hover:text-red-500 hover:bg-red-500/20"
+                      : "bg-muted border-border text-muted-foreground hover:border-primary hover:text-primary hover:bg-primary/5",
                 ].join(" ")}
               >
                 {SCALE_LABELS[scale]}

@@ -1,7 +1,14 @@
 
-# Dashboard Grid
+# Employee Assessment Dashboard
 
-A Next.js App Router dashboard built with Tailwind CSS, shadcn-style UI primitives, and AG Grid. The dashboard displays typed employee assessment data from `lib/assessment-data.json`, supports light/dark themes, and includes department filtering, quick search, metrics, and a paginated grid.
+A Next.js App Router dashboard built with Tailwind CSS, shadcn-style UI primitives, and AG Grid. The dashboard displays typed employee assessment data from `lib/assessment-data.json`.
+
+## Features
+
+- **Advanced Data Grid:** Powered by AG Grid with column pinning, state persistence, dynamic hover rows, and native tooltips.
+- **Filtering & Search:** Department filtering and real-time quick search.
+- **Key Metrics:** Dashboard summary cards displaying vital assessment metrics.
+- **Performance Benchmarking:** An interactive benchmarking panel to stress-test grid and React rendering performance up to 5,000,000 rows, **mainly to explore at what scale the tab crashes**.
 
 ## Tech Stack
 
@@ -49,6 +56,7 @@ npm test
 - `components/ui/`: shadcn-style primitives used by the dashboard.
 - `components/dashboard-grid.tsx`: dashboard container and state wiring.
 - `components/dashboard-grid/`: focused grid modules for columns, cells, toolbar, metrics, grid theme, and the AG Grid wrapper.
+- `components/performance-bench/`: performance testing and benchmarking panel for the grid.
 - `components/theme-provider.tsx`: light/dark mode state and document class synchronization.
 - `docs/performance-metrics.md`: In-depth documentation on how performance metrics and the scaling engine are measured, calculated, and graded.
 - `lib/assessment-data.json`: JSON copy of the assessment data source.
