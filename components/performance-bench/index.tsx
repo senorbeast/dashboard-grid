@@ -1,182 +1,21 @@
 "use client";
 
 import { Activity, ChevronRight, Clock, Cpu, Rows3, Zap } from "lucide-react";
-import { SCALE_LABELS, SCALE_OPTIONS, type ScaleOption } from "@/lib/mock-data-generator";
-import type { PerfSnapshot } from "@/hooks/use-performance-bench";
+import { SCALE_LABELS, SCALE_OPTIONS } from "@/lib/mock-data-generator";
+import { getRenderGrade, getLoadGrade, getFpsGrade, getScaleLabel } from "./grade-utils";
+import { MetricCard } from "./metric-card";
+import { HistoryRow } from "./history-row";
 
-// ---------------------------------------------------------------------------
-// Panel props – only presentational; all state lives in the hook
-// ---------------------------------------------------------------------------
+import type { BenchPanelProps } from "./types";
 
-export type BenchPanelProps = {
-  currentScale: ScaleOption;
-  history: PerfSnapshot[];
-  isPending: boolean;
-  liveFps: number | null;
-  onScaleChange: (scale: ScaleOption) => void;
-};
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-type Grade = { label: string; tw: string };
-
-function getRenderGrade(ms: number): Grade {
-  if (ms < 50) return { label: "Excellent", tw: "text-cyan-400" };
-  if (ms < 150) return { label: "Good", tw: "text-green-400" };
-  if (ms < 400) return { label: "Fair", tw: "text-yellow-400" };
-  return { label: "Slow", tw: "text-red-400" };
-}
-
-function getLoadGrade(ms: number): Grade {
-  if (ms < 150) return { label: "Instant", tw: "text-cyan-400" };
-  if (ms < 600) return { label: "Fast", tw: "text-green-400" };
-  if (ms < 1800) return { label: "Fair", tw: "text-yellow-400" };
-  return { label: "Slow", tw: "text-red-400" };
-}
-
-function getFpsGrade(fps: number): Grade {
-  if (fps >= 55) return { label: "Smooth", tw: "text-cyan-400" };
-  if (fps >= 30) return { label: "Moderate", tw: "text-yellow-400" };
-  return { label: "Choppy", tw: "text-red-400" };
-}
-
-function getScaleLabel(scale: ScaleOption): string {
-  if (scale >= 1000000) return "Mega stress test";
-  if (scale >= 100000) return "Extreme stress test";
-  if (scale >= 5000) return "Stress test territory";
-  if (scale >= 1000) return "Production scale";
-  return "Baseline";
-}
-
-// ---------------------------------------------------------------------------
-// Inline SVG sparkline – pure UI, no measurement logic
-// ---------------------------------------------------------------------------
-
-function Sparkline({ values, stroke }: { values: number[]; stroke: string }) {
-  if (values.length < 2) return null;
-  const W = 80;
-  const H = 28;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  const pts = values
-    .map((v, i) => {
-      const x = (i / (values.length - 1)) * W;
-      const y = H - ((v - min) / range) * (H - 2) - 1;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  return (
-    <svg width={W} height={H} aria-hidden className="opacity-60">
-      <polyline
-        fill="none"
-        points={pts}
-        stroke={stroke}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-      />
-    </svg>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// History row
-// ---------------------------------------------------------------------------
-
-function HistoryRow({ snap, index }: { snap: PerfSnapshot; index: number }) {
-  const renderGrade = getRenderGrade(snap.renderMs);
-  const loadGrade = getLoadGrade(snap.totalLoadMs);
-  const fpsGrade = snap.fps != null ? getFpsGrade(snap.fps) : null;
-  const isEven = index % 2 === 0;
-
-  return (
-    <tr className={isEven ? "bg-muted/30" : ""}>
-      <td className="px-3 py-2 text-xs text-foreground/80 font-medium">
-        {SCALE_LABELS[snap.scale]} rows
-      </td>
-      <td className="px-3 py-2 text-xs text-right tabular-nums font-mono">
-        {snap.renderMs.toFixed(1)} ms
-      </td>
-      <td className="px-3 py-2 text-xs text-right tabular-nums font-mono">
-        {snap.totalLoadMs.toFixed(1)} ms
-      </td>
-      <td className="px-3 py-2 text-xs text-right tabular-nums font-mono">
-        {snap.fps != null ? `${snap.fps} fps` : "—"}
-      </td>
-      <td className="px-3 py-2">
-        <span className={`text-[0.65rem] font-bold uppercase tracking-wide ${renderGrade.tw}`}>
-          {renderGrade.label}
-        </span>
-      </td>
-      <td className="px-3 py-2">
-        <span className={`text-[0.65rem] font-bold uppercase tracking-wide ${loadGrade.tw}`}>
-          {loadGrade.label}
-        </span>
-      </td>
-      <td className="px-3 py-2">
-        {fpsGrade && (
-          <span className={`text-[0.65rem] font-bold uppercase tracking-wide ${fpsGrade.tw}`}>
-            {fpsGrade.label}
-          </span>
-        )}
-      </td>
-    </tr>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Metric card
-// ---------------------------------------------------------------------------
-
-type MetricCardProps = {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  sub?: React.ReactNode;
-  sparklineValues?: number[];
-  sparklineStroke?: string;
-};
-
-function MetricCard({
-  icon,
-  label,
-  value,
-  sub,
-  sparklineValues,
-  sparklineStroke,
-}: MetricCardProps) {
-  return (
-    <div className="flex flex-col gap-1 p-4 border-r border-border last:border-r-0">
-      <div className="flex items-center gap-1.5 mb-0.5">
-        {icon}
-        <span className="text-[0.65rem] font-bold uppercase tracking-widest text-muted-foreground">
-          {label}
-        </span>
-      </div>
-      <div className="text-2xl font-bold tracking-tight tabular-nums leading-none">
-        {value}
-      </div>
-      {sparklineValues && sparklineStroke && (
-        <Sparkline stroke={sparklineStroke} values={sparklineValues} />
-      )}
-      {sub}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Main panel component – purely presentational
-// ---------------------------------------------------------------------------
+export type { BenchPanelProps } from "./types";
 
 export function PerformanceBenchPanel({
   currentScale,
   history,
   isPending,
   liveFps,
-  onScaleChange,
+  onScaleChange,  
 }: BenchPanelProps) {
   const last = history[history.length - 1] ?? null;
   const renderGrade = last ? getRenderGrade(last.renderMs) : null;
