@@ -27,13 +27,13 @@ export function MetricsSummary({
   );
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <div className="flex items-center gap-1.5 mb-1">
         <span className="text-sm font-medium text-muted-foreground">Metrics</span>
         <Tooltip>
           <TooltipTrigger asChild>
             <Info
-              className="size-3.5 text-muted-foreground/60 cursor-help hover:text-muted-foreground transition-colors"
+              className="size-3.5 text-muted-foreground/60 cursor-default hover:text-muted-foreground transition-colors"
               aria-label="Metrics info"
             />
           </TooltipTrigger>
